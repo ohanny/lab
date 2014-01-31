@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Playing with rules</title>
+        <style type="text/css">
+            /* general */
+            body {
+                background-color: #404040;
+                color: #eee;
+                font-family: Verdana;
+            }
+            pre, tt {
+                font-size: 16px;
+                color: #999;
+            }
+            tt:before, tt:after {
+                content: '"';
+            }
+            a {
+                color: #C0BFBF;
+            }
+            hr {
+                margin-bottom: 30px;
+            }
+
+            /* playing with rules */
+            .rule1 {
+                height: 20px;
+                box-shadow: inset 10px 5px #000, inset -10px -5px #888;
+            }
+            .rule2 {
+                color: #000;
+            }
+
+            .rule3 {
+                border: 0px;
+                height: 1px;
+                background: #000;
+            }
+        </style>
+
+    </head>
+ 
+    <body>
+        Example with <tt>box-shadow: 10px 5px 5px #000 inset, -10px -5px #888 inset</tt> and <tt> height: 20px</tt>
+        <hr class="rule1">
+
+        Example with <tt>color: #000</tt>
+        <hr class="rule2">
+
+        Example with <tt>background-color: #000</tt>
+        <hr class="rule3">
+
+        Other examples on <a href="http://css-tricks.com/examples/hrs/">CSS Tricks</a>
+    </body>
+</html>

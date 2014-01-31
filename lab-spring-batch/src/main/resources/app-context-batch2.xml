@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           				   http://www.springframework.org/schema/beans/spring-beans.xsd
+           				   http://www.springframework.org/schema/batch
+         				   http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <description>Example with an item processor : input => Person, output => Person</description>
+
+    <!-- Repository and launcher config-->
+    <import resource="app-context-common.xml"/>
+
+    <!-- Batch config -->
+    <bean id="personReader" class="fr.icodem.lab.batch2.PersonReader"/>
+
+    <bean id="personProcessor" class="fr.icodem.lab.batch2.PersonProcessor" />
+
+    <bean id="personWriter" class="fr.icodem.lab.batch2.PersonWriter"/>
+
+    <job id="helloPersons" xmlns="http://www.springframework.org/schema/batch">
+        <step id="sayHello">
+            <tasklet>
+                <chunk reader="personReader" writer="personWriter"
+                       processor="personProcessor" commit-interval="2" />
+            </tasklet>
+        </step>
+    </job>
+
+</beans>

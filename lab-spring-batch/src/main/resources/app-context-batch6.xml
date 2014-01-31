@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           				   http://www.springframework.org/schema/beans/spring-beans.xsd
+           				   http://www.springframework.org/schema/batch
+         				   http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <description>Simple delimited file reading example with BeanWrapperFieldSetMapper</description>
+
+    <!-- Repository and launcher config-->
+    <import resource="app-context-common.xml"/>
+
+    <!-- Batch config -->
+    <bean id="fieldSetMapper" class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+        <property name="targetType" value="fr.icodem.lab.model.Person" />
+    </bean>
+
+
+    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="delimiter" value="," />
+        <property name="names" value="firstName,lastName,age" />
+    </bean>
+
+    <bean id="personReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <property name="resource" value="file:#{jobParameters['input.file']}" />
+        <property name="linesToSkip" value="1"/>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer" ref="lineTokenizer"/>
+                <property name="fieldSetMapper" ref="fieldSetMapper">
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="personProcessor" class="fr.icodem.lab.batch6.PersonProcessor" />
+
+    <bean id="personWriter" class="fr.icodem.lab.batch6.PersonWriter"/>
+
+    <job id="helloPersons" xmlns="http://www.springframework.org/schema/batch">
+        <step id="sayHello">
+            <tasklet>
+                <chunk reader="personReader" writer="personWriter"
+                       processor="personProcessor" commit-interval="2" />
+            </tasklet>
+        </step>
+    </job>
+
+</beans>

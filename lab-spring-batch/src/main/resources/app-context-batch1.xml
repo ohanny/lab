@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           				   http://www.springframework.org/schema/beans/spring-beans.xsd
+           				   http://www.springframework.org/schema/batch
+         				   http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <description>
+        A very simple example with one step, a custom item reader, a custom item writer
+    </description>
+
+    <!-- Repository and launcher config-->
+    <import resource="app-context-common.xml"/>
+
+    <!-- Batch config -->
+    <bean id="personReader" class="fr.icodem.lab.batch1.PersonReader"/>
+
+    <bean id="personWriter" class="fr.icodem.lab.batch1.PersonWriter"/>
+
+    <job id="helloPersons" xmlns="http://www.springframework.org/schema/batch">
+        <step id="sayHello">
+            <tasklet>
+                <chunk reader="personReader" writer="personWriter"
+                       commit-interval="2" />
+            </tasklet>
+        </step>
+    </job>
+
+</beans>

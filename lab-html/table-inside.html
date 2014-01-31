@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Mise en page tableau</title>
+        <style type="text/css">
+        	html, body {
+        		margin: 0;
+        		padding: 0;
+        		width: 100%;
+        		height: 100%;
+        	}
+        	body {
+        		display: table;
+
+        	}
+        	.header {
+        		display: table-row;
+        		height: 50px;
+        		background-color: magenta;
+        	}
+        	.content {
+        		display: table-row;
+        		background-color: lightgray;
+        	}
+        	.footer {
+        		display: table-row;
+        		background-color: yellow;
+        		height: 50px;
+        	}
+
+            .inside {
+                display: table;
+                width: 100%;
+                height: 100%;
+            }
+            .inside-header {
+                display: table-row;
+                height: 30px;
+                background-color: green;
+            }
+            .inside-main {
+                display: table;
+                width: 100%;
+                height: 100%;
+            }
+            .inside-menu {
+                display: table-cell;
+                width: 200px;
+                height: 100%; /* firefox */
+                background-color: blue;
+            }
+            .inside-content {
+                display: table-cell;
+                background-color: white;
+            }
+            .inside-footer {
+                display: table-row;
+                height: 30px;
+                background-color: green;
+            }
+            #in-menu {
+                height: 100%;
+                border: 1px red solid;
+            }
+        </style>
+
+    </head>
+ 
+    <body>
+    	<div class="header">header</div>
+    	<div class="content">
+            <div class="inside">
+                <div class="inside-header">inside header</div>
+                <div class="inside-main">
+                    <div class="inside-menu"><div id="in-menu">inside menu</div></div>
+                    <div class="inside-content">inside content</div>
+                </div>
+                <div class="inside-footer">inside footer</div>
+            </div>
+        </div>
+    	<div class="footer">footer</div>
+    </body>
+</html>

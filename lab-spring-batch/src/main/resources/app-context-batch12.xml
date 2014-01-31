@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           				   http://www.springframework.org/schema/beans/spring-beans.xsd
+           				   http://www.springframework.org/schema/batch
+         				   http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <description>Import world into database</description>
+
+    <!-- Repository and launcher config-->
+    <import resource="app-context-common.xml"/>
+
+    <!-- ============ -->
+    <!-- Batch config -->
+    <!-- ============ -->
+
+    <!-- Tasklets -->
+    <bean id="clearTablesTasklet" class="fr.icodem.lab.batch12.ClearTablesTasklet" scope="step">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="unzipFileTasklet" class="fr.icodem.lab.batch12.UnzipFileTasklet" scope="step">
+        <property name="archiveFile" value="#{jobParameters['archive.file']}"/>
+    </bean>
+
+    <bean id="deleteFileTasklet" class="fr.icodem.lab.batch12.DeleteFileTasklet" scope="step">
+        <property name="countriesFile" value="#{jobParameters['countries.file']}"/>
+        <property name="languagesFile" value="#{jobParameters['languages.file']}"/>
+        <property name="citiesFile" value="#{jobParameters['cities.file']}"/>
+    </bean>
+
+    <!-- Item Readers -->
+    <bean id="fieldSetMapperCountry" class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+        <property name="targetType" value="fr.icodem.lab.model.Country" />
+    </bean>
+    <bean id="fieldSetMapperLanguage" class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+        <property name="targetType" value="fr.icodem.lab.model.CountryLanguage" />
+    </bean>
+    <bean id="fieldSetMapperCity" class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+        <property name="targetType" value="fr.icodem.lab.model.City" />
+    </bean>
+
+
+    <bean id="lineTokenizerCountry" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="delimiter" value="," />
+        <property name="names" value="code,name,continent,region,surfaceArea,independanceYear,population,lifeExpectancy" />
+    </bean>
+    <bean id="lineTokenizerLanguage" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="delimiter" value="," />
+        <property name="names" value="countryCode,language,isOfficial,percentage" />
+    </bean>
+    <bean id="lineTokenizerCity" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="delimiter" value="," />
+        <property name="names" value="id,name,countryCode,district,population" />
+    </bean>
+
+    <bean id="countryReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <property name="resource" value="file:#{jobParameters['countries.file']}" />
+        <property name="linesToSkip" value="1"/>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer" ref="lineTokenizerCountry"/>
+                <property name="fieldSetMapper" ref="fieldSetMapperCountry">
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="languageReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <property name="resource" value="file:#{jobParameters['languages.file']}" />
+        <property name="linesToSkip" value="1"/>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer" ref="lineTokenizerLanguage"/>
+                <property name="fieldSetMapper" ref="fieldSetMapperLanguage">
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cityReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <property name="resource" value="file:#{jobParameters['cities.file']}" />
+        <property name="linesToSkip" value="1"/>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer" ref="lineTokenizerCity"/>
+                <property name="fieldSetMapper" ref="fieldSetMapperCity">
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Item Writers -->
+    <bean id="countryWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     insert into country (code, name, continent, region, surface_area, indep_year, population, life_expectancy)
+                     values(:code, :name, :continent, :region, :surfaceArea, :independanceYear, :population, :lifeExpectancy)
+                ]]>
+            </value>
+        </property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
+        </property>
+    </bean>
+
+    <bean id="languageWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     insert into country_language (country_code, language, is_official, percentage)
+                     values(:countryCode, :language, :isOfficial, :percentage)
+                ]]>
+            </value>
+        </property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
+        </property>
+    </bean>
+
+    <bean id="cityWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     insert into city (id, name, country_code, district, population)
+                     values(:id, :name, :countryCode, :district, :population)
+                ]]>
+            </value>
+        </property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
+        </property>
+    </bean>
+
+    <!-- Job description -->
+    <job id="importWorld" xmlns="http://www.springframework.org/schema/batch">
+        <step id="clearTables" next="unzipFiles">
+            <tasklet ref="clearTablesTasklet"/>
+        </step>
+        <step id="unzipFiles" next="importCountries">
+            <tasklet ref="unzipFileTasklet"/>
+        </step>
+        <step id="importCountries" next="importLanguages">
+            <tasklet>
+                <chunk reader="countryReader" writer="countryWriter" commit-interval="5" />
+            </tasklet>
+        </step>
+        <step id="importLanguages" next="importCities">
+            <tasklet>
+                <chunk reader="languageReader" writer="languageWriter" commit-interval="5" />
+            </tasklet>
+        </step>
+        <step id="importCities" next="deleteFiles">
+            <tasklet>
+                <chunk reader="cityReader" writer="cityWriter" commit-interval="10" />
+            </tasklet>
+        </step>
+        <step id="deleteFiles">
+            <tasklet ref="deleteFileTasklet"/>
+        </step>
+    </job>
+
+</beans>

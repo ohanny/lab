@@ -1,0 +1,31 @@
+
+.workbench {
+	display: table;
+	background: #fff;
+	width: 100%;
+	height: 100%;
+	background-image: url('linen-lighter.png');
+}
+
+.navbar {
+	display: table-row;
+	height: 36px;
+}
+
+.toolbar {
+	display: table-row;
+	height: 52px;
+}
+
+.preview {
+	display: table-cell;
+	background-image: url('linen-gray.png');
+	border-right: 3px solid #333;
+	width: 150px;
+}
+
+.scene {
+	display: table-cell;
+	background-color: yellow;
+}
+

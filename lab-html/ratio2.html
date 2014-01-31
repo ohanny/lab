@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Ratio 2</title>
+
+		<style type="text/css">
+			.aspectwrapper {
+				/*display: inline-block;*/ /* shrink to fit */
+				width: 80%; /* whatever width you like */
+				position: relative; /* so .content can use position: absolute */
+			}
+			.aspectwrapper::after {
+				padding-top: 50.0%; /* percentage of containing block width */
+				display: block; /* padding is not applied to inline element (i.e. content) */
+				content: '';
+			}
+			.content {
+				position: absolute;
+				top: 0; bottom: 0; right: 0; left: 0; /* follow the parent's edges */
+				outline: thin dashed green; /* just so you can see the box */
+			}
+		</style>
+
+    </head>
+ 
+    <body>
+    	<div class="aspectwrapper">
+    		<div class="content">
+    			
+    		</div>
+		</div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Ratio</title>
+
+		<style type="text/css">
+			.outer {
+			  position:relative; /* so .content can use position: absolute */
+			  width: 100%;/* whatever width you like */
+			  display:inline-block;/* shrink to fit */
+			  /*border: 1px solid green;*/
+			}
+			.inner-top {
+			   position:absolute; top:0; left:0; bottom:0; right:0;
+			}
+			.square {    
+			    position: absolute;
+			    top:0;left:0;bottom:0;right:20%;
+			    background:orange; 
+			}
+			.right {
+			    position: absolute;
+			    top:0;right:0;bottom:0;left:83%;
+			    background: purple;
+			}
+			.fill { 
+			    *height: 80%;
+			    margin-top: 10%;  /* Same as square width */
+			}
+			@media (max-width: 480px) {
+			    .square { right: 51%; background: blue; }
+			    .right { left: 51%; }
+			    .fill { margin-top: 49%; } 
+			}
+		</style>
+
+    </head>
+ 
+    <body>
+    	<div class='container'>
+		    <div class='outer'>
+		        <div class='fill'></div>
+		        <div class='inner-top'>
+		            <div class='square'>Always a square</div>
+		            <div class='right'>% width</div>
+		        </div>
+		    </div>
+		    <div class='bottom'>
+		        Bottom
+		    </div>
+		</div>
+		<div>
+			<div style="display:inline-block;">DIV 1</div>
+			<div style="display:inline-block;">DIV 2</div>
+		</div>
+    </body>
+</html>

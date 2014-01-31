@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           				   http://www.springframework.org/schema/beans/spring-beans.xsd
+           				   http://www.springframework.org/schema/batch
+         				   http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <description>JDBC reader example example</description>
+
+    <!-- Load annotated beans -->
+    <bean id="zipFileTasklet" class="fr.icodem.lab.batch11.ZipFileTasklet" scope="step">
+        <property name="archiveFile" value="#{jobParameters['archive.file']}"/>
+        <property name="countriesFile" value="#{jobParameters['countries.file']}"/>
+        <property name="languagesFile" value="#{jobParameters['languages.file']}"/>
+        <property name="citiesFile" value="#{jobParameters['cities.file']}"/>
+    </bean>
+
+    <!-- Repository and launcher config-->
+    <import resource="app-context-common.xml"/>
+
+    <!-- ============ -->
+    <!-- Batch config -->
+    <!-- ============ -->
+
+    <!-- Item Readers -->
+    <bean id="countryReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     select code, name, continent, region, surface_area as surfaceArea, indep_year as independanceYear,
+                     population, life_expectancy as lifeExpectancy from country
+                ]]>
+            </value>
+        </property>
+        <property name="rowMapper">
+            <bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+                <constructor-arg value="fr.icodem.lab.model.Country" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="languageReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     select country_code as countryCode, language,
+                     is_official as isOfficial, percentage from country_language
+                ]]>
+            </value>
+        </property>
+        <property name="rowMapper">
+            <bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+                <constructor-arg value="fr.icodem.lab.model.CountryLanguage" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cityReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                     select id, name, country_code as countryCode, district, population from city
+                ]]>
+            </value>
+        </property>
+        <property name="rowMapper">
+            <bean class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+                <constructor-arg value="fr.icodem.lab.model.City" />
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Header callbacks -->
+    <bean id="countryHeaderCallback" class="fr.icodem.lab.batch11.CountryHeaderCallBack"/>
+    <bean id="languageHeaderCallback" class="fr.icodem.lab.batch11.CountryLanguageHeaderCallBack"/>
+    <bean id="cityHeaderCallback" class="fr.icodem.lab.batch11.CityHeaderCallBack"/>
+
+    <!-- Item Writers -->
+    <bean id="countryWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:#{jobParameters['countries.file']}" />
+        <property name="headerCallback" ref="countryHeaderCallback"/>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="delimiter" value=","/>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="code,name,continent,region,surfaceArea,independanceYear,population,lifeExpectancy"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="languageWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:#{jobParameters['languages.file']}" />
+        <property name="headerCallback" ref="languageHeaderCallback"/>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="delimiter" value=","/>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="countryCode,language,isOfficial,percentage"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cityWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:#{jobParameters['cities.file']}" />
+        <property name="headerCallback" ref="cityHeaderCallback"/>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="delimiter" value=","/>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="id,name,countryCode,district,population"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Job description -->
+    <job id="extractWorld" xmlns="http://www.springframework.org/schema/batch">
+        <step id="extractCountries" next="extractCountryLanguages">
+            <tasklet>
+                <chunk reader="countryReader" writer="countryWriter" commit-interval="5" />
+            </tasklet>
+        </step>
+        <step id="extractCountryLanguages" next="extractCities">
+            <tasklet>
+                <chunk reader="languageReader" writer="languageWriter" commit-interval="5" />
+            </tasklet>
+        </step>
+        <step id="extractCities" next="zipFiles">
+            <tasklet>
+                <chunk reader="cityReader" writer="cityWriter" commit-interval="10" />
+            </tasklet>
+        </step>
+        <step id="zipFiles">
+            <tasklet ref="zipFileTasklet"/>
+        </step>
+    </job>
+
+</beans>

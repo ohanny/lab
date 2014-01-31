@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Playing with borders</title>
+        <style type="text/css">
+            /* general */
+            body {
+                background-color: #404040;
+                color: #eee;
+                font-family: Verdana;
+            }
+            div {
+                padding: 5px;
+                margin: 40px;
+                width: 60%;
+                min-height: 40px;
+            }
+            pre, tt {
+                font-size: 16px;
+                color: #999;
+            }
+            tt:before, tt:after {
+                content: '"';
+            }
+            a {
+                color: #C0BFBF;
+            }
+
+            /* playing with borders */
+            .border1 {
+                border: groove #000 2px;
+            }
+            .border2 {
+                box-shadow: 0 10px 5px 0 #000, 10px 0 5px 0 blue,
+                            0 -10px 5px 0 red , -10px 0 5px 0 gold;
+            }
+            .border3 {
+                box-shadow: 10px 10px #888, -10px -10px #000, 0px 0px 5px 5px #cc6600;
+            }
+            .border4 {
+                box-shadow: 10px 5px 5px #000 inset, -10px -5px #888 inset;
+            }
+            .border5 {
+                box-shadow: 0 1px 5px #000 inset, 0 -1px #888 inset;
+            }
+            .border6 {
+                box-shadow: 0 1px #000 inset, 0 -1px #888 inset;
+                min-height: 0px;
+                height: 2px;
+                padding: 0;
+
+                /* not important */
+                margin-top: 8px;
+            }
+            .border7 {
+                box-shadow: 1px 0 #333 inset, -1px 0 #555 inset;
+                height: 30px;
+                width: 2px;
+                padding: 0;
+
+                /* not important */
+                margin-top: 8px;
+                min-height: 0px;
+            }
+        </style>
+
+    </head>
+ 
+    <body>
+    	<div class="border1">
+            CSS border applied to div element : <tt>border: groove #000 2px</tt>
+            works on Firefox, not Webkit.
+        </div>
+        <div class="border2">
+            CSS <tt>box-shadow</tt> applied : works everywhere !
+            <pre>                
+                box-shadow: 0 10px 5px 0 #000, 10px 0 5px 0 blue,
+                            0 -10px 5px 0 red , -10px 0 5px 0 gold;
+            </pre>
+            The syntax :
+            <pre>
+                box-shadow: none | &lt;shadow&gt; [ , &lt;shadow&gt; ]*
+                &lt;shadow&gt; = inset? && [ &lt;length&gt;{2,4} && &lt;color&gt;? ]
+            </pre>
+            Order of shadow if length = 4 and not inset : bottom, right, top, left<br>
+            Length : offset-x (required), offset-y (required), blur-radius, spread-radius<br>
+            <a href="http://www.css3.info/preview/box-shadow/">More info on css3.info</a>
+        </div>
+        <div class="border3">
+            Example with 3 shadows
+            <pre>
+                box-shadow: 10px 10px #888, 
+                           -10px -10px #000, 
+                             0px 0px 5px 5px #cc6600
+            </pre>
+        </div>
+        <div class="border4">
+            Example with inset and two colors
+            <pre>
+                box-shadow: 10px 5px 5px #000 inset, 
+                           -10px -5px #888 inset;
+            </pre>
+        </div>
+        <div class="border5">
+            Example with inset and two colors
+            <pre>
+                box-shadow: 0 1px 5px #000 inset, 
+                            0 -1px #888 inset;
+            </pre>
+        </div>
+
+        <span style="margin-left: 40px;">Example with <tt>box-shadow: 0 1px #000 inset, 0 -1px #888 inset</tt> and <tt>height: 2px</tt> and <tt>padding: 0</tt></span>
+        <div class="border6"></div>
+        
+        <span style="margin-left: 40px;">Example with <tt>box-shadow: 1px 0 #333 inset, -1px 0 #555 inset</tt> and <tt>height: 30px</tt> and <tt>width: 2px</tt> and <tt>padding: 0</tt></span>
+        <div class="border7"/>
+
+        <br/>
+    </body>
+</html>

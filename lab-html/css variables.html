@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Variables CSS</title>
+
+		<style type="text/css">
+			:root {
+				-webkit-var-mycolor: #06c;
+				/*x-mycolor: #06c;*/
+			}
+			.wrapper {
+				width: 300px;
+				height: 300px;
+				border: 1px dashed green;
+				-webkit-var-mycolor: #06c;
+				/*-webkit-var-mywidth: 100px;*/
+				-webkit-var-mywidth: -webkit-calc(attr(data-xxx px) - 30px);
+			}
+			.content {
+				width: -webkit-calc(-webkit-var(mywidth)); /* chrome */
+				width: calc(100% - 20px); /* firefox */
+				height: attr(data-xxx, 'px');
+				background-color: -webkit-var(mycolor);
+				/*x-mycolor: inherit;*/
+				/*background-color: -moz-get(x-mycolor);*/
+				border: 1px dashed blue;
+			}
+			.content::after {
+				content: attr(data-xxx);
+				color: attr(data-yyy);
+				font-size: calc(attr(data-xxx));
+			}
+		</style>
+
+    </head>
+ 
+    <body>
+    	<div class="wrapper" data-xxx="20">
+    		<div class="content" data-xxx="40" data-yyy="yellow">
+    			le contenu
+    			<h1>un élément h1</h1>
+    		</div>
+		</div>
+    </body>
+</html>
