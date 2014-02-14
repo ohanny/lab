@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
 
-public class HelloBatch6 {
+public class Main {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("app-context-batch6.xml");
         ctx.start();
@@ -19,7 +19,7 @@ public class HelloBatch6 {
 
         JobParameters params = new JobParametersBuilder()
                 .addDate("date", new Date())
-                .addString("input.file", "lab-spring-batch/data/persons-delimited.csv")
+                .addString("input.file", "lab-spring-batch/data/input/persons-delimited.csv")
                 .toJobParameters();
         jobLauncher.run(job, params);
 

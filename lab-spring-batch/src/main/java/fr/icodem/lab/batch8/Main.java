@@ -1,4 +1,4 @@
-package fr.icodem.lab.batch4;
+package fr.icodem.lab.batch8;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -8,9 +8,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
 
-public class HelloBatch4 {
+public class Main {
     public static void main(String[] args) throws Exception {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("app-context-batch4.xml");
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("app-context-batch8.xml");
         ctx.start();
 
         JobLauncher jobLauncher = (JobLauncher) ctx.getBean("jobLauncher");
@@ -19,6 +19,7 @@ public class HelloBatch4 {
 
         JobParameters params = new JobParametersBuilder()
                 .addDate("date", new Date())
+                .addString("input.file", "lab-spring-batch/data/input/persons-fixed-length.csv")
                 .toJobParameters();
         jobLauncher.run(job, params);
 

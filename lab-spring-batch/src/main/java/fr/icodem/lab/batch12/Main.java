@@ -6,9 +6,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.Date;
-
-public class HelloBatch12 {
+public class Main {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("app-context-batch12.xml");
         ctx.start();
