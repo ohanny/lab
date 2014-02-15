@@ -17,7 +17,7 @@
         <property name="sql">
             <value>
                 <![CDATA[
-                     select id, name, countryCode, district, population from city
+                     select id, name, country_code, district, population from city
                 ]]>
             </value>
         </property>

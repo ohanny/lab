@@ -19,7 +19,7 @@ public class Main {
 
         JobParameters params = new JobParametersBuilder()
                 .addDate("date", new Date())
-                .addString("cities.file", "lab-spring-batch/data/cities.csv")
+                .addString("cities.file", "lab-spring-batch/data/output/cities.csv")
                 .toJobParameters();
         jobLauncher.run(job, params);
 
