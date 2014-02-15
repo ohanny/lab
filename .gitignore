@@ -14,3 +14,7 @@
 # Maven
 log/
 target/
+
+# Projects
+lab-spring-batch/data/output/cities.csv
+lab-spring-batch/data/output/world.zip
