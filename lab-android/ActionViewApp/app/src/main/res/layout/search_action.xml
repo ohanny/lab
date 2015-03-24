@@ -16,6 +16,8 @@
     <!-- Single line edit text :
         android:lines is not needed
         android:inputType="text" to prevent entering a new line
+
+        With this solution, android:layout_width="match_parent" does not fill the parent
     -->
 
 </LinearLayout>
