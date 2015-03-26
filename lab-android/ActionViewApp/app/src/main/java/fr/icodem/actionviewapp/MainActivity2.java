@@ -11,6 +11,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,10 +53,13 @@ public class MainActivity2 extends ActionBarActivity implements TextView.OnEdito
 
                 searchEditText.requestFocus();
                 searchEditText.setText("");
-
-                // show soft keyboard
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+                searchEditText.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                }, 200);
 
                 return true;
             }
@@ -62,6 +67,9 @@ public class MainActivity2 extends ActionBarActivity implements TextView.OnEdito
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 Log.d("MainActivity2", "Selected menu item => " + "OnActionExpandListener.onMenuItemActionCollapse()");
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
 
                 return true;
             }

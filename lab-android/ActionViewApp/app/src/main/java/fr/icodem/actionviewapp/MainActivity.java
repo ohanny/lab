@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements TextView.OnEditor
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
                 Log.d("MainActivity", "Selected menu item => " + "OnActionExpandListener.onMenuItemActionExpand()");
 
-                searchEditText.requestFocus();
+                boolean b = searchEditText.requestFocus();
                 searchEditText.setText("");
 
                 // show soft keyboard
