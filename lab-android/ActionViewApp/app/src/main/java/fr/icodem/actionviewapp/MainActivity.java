@@ -55,6 +55,9 @@ public class MainActivity extends ActionBarActivity implements TextView.OnEditor
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 Log.d("MainActivity", "Selected menu item => " + "OnActionExpandListener.onMenuItemActionCollapse()");
 
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+
                 return true;
             }
         });
