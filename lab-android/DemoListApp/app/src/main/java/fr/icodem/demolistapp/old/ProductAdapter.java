@@ -1,4 +1,4 @@
-package fr.icodem.demolistapp;
+package fr.icodem.demolistapp.old;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,12 +12,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.icodem.demolistapp.R;
+
 public class ProductAdapter extends BaseAdapter {
     private final Context mContext;
 
     private List<Product> products = new ArrayList<Product>();
-
-    private DownloadImageTask downloadImageTask = DownloadImageTask.getInstance();
+    private BitmapLoader<Integer> bitmapLoader = new BitmapLoader<Integer>(Constants.IMAGE_BASE_URL);
 
     static class ViewHolder {
         TextView textView;
@@ -78,9 +79,7 @@ public class ProductAdapter extends BaseAdapter {
         }
 
         viewHolder.textView.setText(p.getName());
-
-        String url = Constants.IMAGE_BASE_URL + p.getImageId();
-        downloadImageTask.loadBitmap(url, viewHolder.imageView);
+        bitmapLoader.loadBitmap(mContext, p.getId(), viewHolder.imageView);
 
         return convertView;
 

@@ -1,11 +1,10 @@
-package fr.icodem.demolistapp;
+package fr.icodem.demolistapp.old;
 
 public class Product {
     private int id;
     private String name;
     private String description;
     private double price;
-    private int imageId;
 
     public int getId() {
         return id;
@@ -37,13 +36,5 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
     }
 }

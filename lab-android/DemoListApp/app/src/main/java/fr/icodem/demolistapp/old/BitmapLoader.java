@@ -1,4 +1,4 @@
-package fr.icodem.demolistapp;
+package fr.icodem.demolistapp.old;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+
+import fr.icodem.demolistapp.R;
 
 public class BitmapLoader<K> {
     private ImageCache<K> imageCache = new ImageCache<K>();
